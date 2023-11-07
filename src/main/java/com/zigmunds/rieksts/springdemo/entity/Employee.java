@@ -20,15 +20,15 @@ public class Employee {
 
     @Column(name = "first_name")
     @NotNull(message="*is required")
-    private String firstName ="";
+    private String firstName;
     @Column(name = "last_name")
     @NotNull(message="*is required")
-    private String lastName="";
+    private String lastName;
     @Column(name = "email")
     @NotNull(message="*is required")
     @Pattern(regexp = "^(?=.{1,64}@)[\\p{L}0-9_-]+(\\.[\\p{L}0-9_-]+)*@"
             + "[^-][\\p{L}0-9-]+(\\.[\\p{L}0-9-]+)*(\\.[\\p{L}]{2,})$", message = "invalid email")
-    private String email="";
+    private String email;
 
     public Employee() {
     }
