@@ -2,9 +2,13 @@ package com.zigmunds.rieksts.springdemo.controller;
 
 import com.zigmunds.rieksts.springdemo.entity.Employee;
 import com.zigmunds.rieksts.springdemo.service.EmployeeService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +22,16 @@ public class EmployeeController {
     @Autowired
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
+    }
+
+    // add an initbinder ... to convert trim input strings
+    // remove leading and trailing whitespace
+    @InitBinder
+    public void initBinder(WebDataBinder dataBinder) {
+
+        StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
+
+        dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
     }
 
     @GetMapping("/list")
@@ -53,13 +67,19 @@ public class EmployeeController {
     }
 
     @PostMapping("/save")
-    public String saveEmployee(@ModelAttribute("employee") Employee theEmployee) {
+    public String saveEmployee(
+            @Valid @ModelAttribute("employee") Employee theEmployee,
+            BindingResult theBindingResult) {
 
-        // save the employee
-        employeeService.save(theEmployee);
+        if (theBindingResult.hasErrors()) {
+            return "employees/employee-form";
+        }
+        else {
+            employeeService.save(theEmployee);
 
-        // use a redirect to prevent duplicate submissions
-        return "redirect:/employees/list";
+            // use a redirect to prevent duplicate submissions
+            return "redirect:/employees/list";
+        }
     }
 
     @PostMapping("/delete")
