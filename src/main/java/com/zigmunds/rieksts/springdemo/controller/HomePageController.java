@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomePageController {
 
     @GetMapping("/")
-    public String sayhello(Model theModel) {
+    public String homePage(Model theModel) {
 
         theModel.addAttribute("theDate", new java.util.Date());
 
-        return "helloworld";
+        return "homePage";
     }
 }

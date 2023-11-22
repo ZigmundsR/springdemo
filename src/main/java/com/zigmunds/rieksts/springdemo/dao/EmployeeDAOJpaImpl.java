@@ -50,4 +50,19 @@ public class EmployeeDAOJpaImpl implements EmployeeDAO {
 
         entityManager.remove(theEmployee);
     }
+
+    @Override
+    public List<Employee> findAll(String search) {
+        TypedQuery<Employee> theQuery = entityManager.createQuery(
+                "FROM Employee " +
+                        "WHERE firstName LIKE :search " +
+                        "OR email LIKE :search " +
+                        "OR lastName LIKE :search", Employee.class);
+
+        theQuery.setParameter("search", "%" + search + "%");
+
+        List<Employee> employees = theQuery.getResultList();
+
+        return employees;
+    }
 }

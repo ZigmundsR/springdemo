@@ -1,17 +1,25 @@
 package com.zigmunds.rieksts.springdemo.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
-@Table(name = "employee")
-public class Employee {
+@Table(name = "student")
+public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,15 +35,41 @@ public class Employee {
     private String lastName;
 
     @Column(name = "email")
-    @NotNull(message="*is required")
     @Pattern(regexp = "^(?=.{1,64}@)[\\p{L}0-9_-]+(\\.[\\p{L}0-9_-]+)*@"
             + "[^-][\\p{L}0-9-]+(\\.[\\p{L}0-9-]+)*(\\.[\\p{L}]{2,})$", message = "invalid email")
     private String email;
 
-    public Employee() {
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+                    CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinTable(
+            name = "course_student",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private List<Course> courses;
+
+    public void addCourse(Course theCourse) {
+
+        if (courses == null) {
+            courses = new ArrayList<>();
+            courses.add(theCourse);
+        } else {
+            if (!courses.contains(theCourse)){
+                courses.add(theCourse);
+            }
+        }
     }
 
-    public Employee(String firstName, String lastName, String email) {
+    public void removeCourse(Course theCourse){
+        courses.remove(theCourse);
+    }
+
+    public Student() {
+
+    }
+
+    public Student(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -71,5 +105,13 @@ public class Employee {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
     }
 }

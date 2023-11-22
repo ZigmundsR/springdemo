@@ -13,20 +13,20 @@
        .error {color:red;}
    </style>
 
-    <title>Update Employee</title>
+    <title>Save Student</title>
 </head>
 
 <body>
 
     <div class="container">
 
-        <h3>Employee Directory</h3>
+        <h3>Student Directory</h3> 
         <hr>
 
-        <p class="h4 mb-4">Update Employee</p>
+        <p class="h4 mb-4">Save Student</p>
 
-        <form action="#" th:action="@{/employees/save}"
-            th:object="${employee}" method="POST">
+        <form action="#" th:action="@{/students/save}"
+            th:object="${student}" method="POST">
 
             <!-- Add hidden form field to handle update -->
             <input type="hidden" th:field="*{id}" />
@@ -49,12 +49,12 @@
             <input type="text" th:field="*{email}"
                 class="form-control mb-4 w-25" placeholder="Email"/>        
 
-            <button type="submit" class="btn btn-info col-2">Update</button>
+            <button type="submit" class="btn btn-info col-2">Save</button>
 
         </form>
 
         <hr>
-        <a th:href="@{/employees/list}">Back to Employees List</a>
+        <a th:href="@{/students/list}">Back to Student List</a>
 
     </div>
 

@@ -12,4 +12,6 @@ public interface EmployeeDAO {
     Employee save(Employee theEmployee);
 
     void deleteById(int theId);
+
+    List<Employee> findAll(String search);
 }
