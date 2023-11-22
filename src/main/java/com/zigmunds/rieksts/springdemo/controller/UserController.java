@@ -52,11 +52,7 @@ public class UserController extends BaseController {
 
         theModel.addAttribute("user", user);
 
-        List<String> rolesName = roleService.findRoleNames();
-
-        theModel.addAttribute("rolesList", rolesName);
-
-        theModel.addAttribute("selectedRoles", "");
+        manageModelForRoles(theModel, user, "");
 
         return "users/user-form";
     }
@@ -69,20 +65,7 @@ public class UserController extends BaseController {
 
         theModel.addAttribute("user", user);
 
-        // send all roles
-        List<String> rolesList = roleService.findRoleNames();
-
-        theModel.addAttribute("rolesList", rolesList);
-
-        // send user roles
-        List<String> rolesName = user.getRoles().stream()
-                .map(Role::getName)
-                .toList();
-
-        String rolesNameString = String.join(",", rolesName);
-
-        theModel.addAttribute("selectedRoles", rolesNameString);
-
+        manageModelForRoles(theModel, user, "");
 
         return "users/user-form";
     }
@@ -90,10 +73,12 @@ public class UserController extends BaseController {
     @PostMapping("/save")
     public String saveUser(
             @Valid @ModelAttribute("user") User user,
-            @RequestParam(name = "selectedRoles", required = false) String selectedRoles,
-            BindingResult theBindingResult, Model theModel) {
+            BindingResult theBindingResult, Model theModel,
+            @RequestParam(name = "selectedRoles", required = false) String selectedRoles) {
 
         if (theBindingResult.hasErrors()) {
+            manageModelForRoles(theModel, user, selectedRoles);
+
             return "users/user-form";
         }
         if (user.getId() == 0) {
@@ -101,6 +86,8 @@ public class UserController extends BaseController {
 
             if (!existing) {
                 theModel.addAttribute("registrationError", "User name already exists.");
+
+                manageModelForRoles(theModel, user, selectedRoles);
 
                 return "users/user-form";
             }
@@ -126,6 +113,24 @@ public class UserController extends BaseController {
 
         return "redirect:/users/list";
 
+    }
+
+    public void manageModelForRoles(Model theModel, User user, String selectedRoles ){
+        // send all roles
+        List<String> rolesList = roleService.findRoleNames();
+
+        theModel.addAttribute("rolesList", rolesList);
+
+        if (user.getRoles() != null) {
+            // send user roles
+            List<String> rolesName = user.getRoles().stream()
+                    .map(Role::getName)
+                    .toList();
+
+            selectedRoles = String.join(",", rolesName);
+        }
+
+        theModel.addAttribute("selectedRoles", selectedRoles);
     }
 
 }
