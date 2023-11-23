@@ -39,7 +39,7 @@
                      th:errors="*{instructor}"
                      class="error"></span>  
               <select th:field="*{instructor}" class="form-control mb-4 w-25">  
-                     <option th:each="instructor : ${instructorList}" th:value="${instructor}" th:text="${instructor.id} + ' ' + ${instructor.firstName} + ' ' +${instructor.lastName}"></option>
+                     <option th:each="instructor : ${instructorList}" th:value="${instructor}" th:text="${instructor.firstName} + ' ' +${instructor.lastName}"></option>
               </select>
     
             <button type="submit" class="btn btn-info col-2">Save</button>
