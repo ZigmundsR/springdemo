@@ -16,7 +16,7 @@ To run the application(you can do one of these):
 1) Need an IDE, for example IntelliJ, open the project and run SpringdemoApplication.java
 2) (Windows) In CMD cd in directory of project, run "mvnw package", then run "java -jar target\springdemo-0.0.1-SNAPSHOT.jar" or "mvnw spring-boot:run"
 
-Then you should be able to access it under http://localhost:8080/ and see homepage
+Then you should be able to access it under http://localhost:8080/ and see homepage. For full functionalities login as admin password: "nimda"
 
 Functionalities implemented:
 - login/logout user with roles for access. Using BCrypt for passwords.
